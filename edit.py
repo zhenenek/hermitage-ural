@@ -1,6 +1,6 @@
 import re
 
-with open("text.txt", "r", encoding="utf-8") as file:  # заменить file_name на имя файла
+with open("text.txt", "r", encoding="utf-8") as file: 
 
     txt = file.read()
 
