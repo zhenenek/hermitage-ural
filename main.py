@@ -11,6 +11,5 @@ model = "deepseek-r1:14b"
 model_reply = client.generate(model=model, prompt=prompt)
 result = model_reply.response
 
-print('Response:')
-print(result)
+print('Response:',result)
 save_to_db(result)
