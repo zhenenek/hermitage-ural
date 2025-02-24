@@ -17,7 +17,15 @@ def extract_answer(result):
     
     
     return result.strip()
+def extract_answer(result):
+    parts = result.split("</think>")
+    
+    if len(parts) > 1:
+        return parts[1].strip()
+    
+    
+    return result.strip()
 
 clean_response = extract_answer(result)
-save_to_db(clean_response)
 print(clean_response)
+save_to_db(clean_response)
