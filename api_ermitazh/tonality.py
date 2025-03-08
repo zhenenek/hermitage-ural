@@ -1,9 +1,9 @@
 from transformers import pipeline
-from edit import out_txt
+from prompt import text
 classifier = pipeline("sentiment-analysis", model="blanchefort/rubert-base-cased-sentiment")
 
 
-texts = out_txt
+texts = text
 
 results = classifier(texts)
 for result_tn in results: 
