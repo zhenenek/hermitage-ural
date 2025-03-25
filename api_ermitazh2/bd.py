@@ -10,6 +10,7 @@ def save_to_db(result, sentiment_data):
         CREATE TABLE IF NOT EXISTS Users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
+            operator TEXT NOT NULL,
             reason TEXT NOT NULL,
             satisfaction TEXT NOT NULL,
             age INTEGER,
@@ -20,6 +21,7 @@ def save_to_db(result, sentiment_data):
 
         data = {
             'name': extract_value(result, 'Имя:'),
+            'operator': extract_value(result, 'Оператор:'),
             'reason': extract_value(result, 'Причина:'),
             'satisfaction': extract_value(result, 'Удовлетворение:'),
             'age': extract_value(result, 'Возраст:'),
@@ -27,10 +29,11 @@ def save_to_db(result, sentiment_data):
         }
 
         cursor.execute('''
-        INSERT INTO Users (name, reason, satisfaction, age, full_analysis)
-        VALUES (?, ?, ?, ?, ?)''', 
+        INSERT INTO Users (name, operator, reason, satisfaction, age, full_analysis)
+        VALUES (?, ?, ?, ?, ?,?)''', 
         (
             data['name'], 
+            data['operator'],
             data['reason'], 
             data['satisfaction'],
             data['age'],
@@ -38,7 +41,7 @@ def save_to_db(result, sentiment_data):
         ))
 
         connection.commit()
-        print(f"Сохранено: {data['name']}")
+        
         print(f"Анализ тональности: {data['full_analysis']}")
         
     except Exception as e:
