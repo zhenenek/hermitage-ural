@@ -1,4 +1,3 @@
-# bd.py
 import sqlite3
 
 def save_to_db(result, sentiment_value):
@@ -7,10 +6,10 @@ def save_to_db(result, sentiment_value):
 
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS Users (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         reason TEXT NOT NULL,
-        health TEXT NOT NULL,
+        satisfaction TEXT NOT NULL,
         tonality TEXT NOT NULL,
         age INTEGER
     )''')
@@ -22,6 +21,7 @@ def save_to_db(result, sentiment_value):
     reason = result.split('Причина: ')[1].split(',')[0].strip()
     health = result.split('Удовлетворение: ')[1].split(',')[0].strip()
     age = result.split('Возраст: ')[1].split(',')[0].strip()
+    tonality = sentiment
     
 
     cursor.execute('''

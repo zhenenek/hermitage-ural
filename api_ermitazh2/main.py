@@ -10,19 +10,18 @@ client = OpenAI(
 )
 
 def process_dialog():
-    
     analyzer = TonalityAnalyzer()
     sentiment = analyzer.analyze(text)
-    
-    
+
     completion = client.chat.completions.create(
         extra_body={},
         model="deepseek/deepseek-chat:free",
         messages=[{"role": "user", "content": prompt}]
     )
-    
+
     response = completion.choices[0].message.content
     save_to_db(response, sentiment)
 
 if __name__ == "__main__":
     process_dialog()
+    
