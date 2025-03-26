@@ -1,33 +1,57 @@
 import sqlite3
+import json
 
-def save_to_db(result, sentiment_value):
-    connection = sqlite3.connect('database_api.db')
-    cursor = connection.cursor()
+def save_to_db(result, sentiment_data):
+    try:
+        connection = sqlite3.connect('database_api.db')
+        cursor = connection.cursor()
 
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS Users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        reason TEXT NOT NULL,
-        satisfaction TEXT NOT NULL,
-        tonality TEXT NOT NULL,
-        age INTEGER
-    )''')
-    
-    cursor.execute('CREATE INDEX IF NOT EXISTS name ON Users (name)')
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            operator TEXT NOT NULL,
+            reason TEXT NOT NULL,
+            satisfaction TEXT NOT NULL,
+            age INTEGER,
+            full_analysis TEXT NOT NULL
+        )''')
+        
+        cursor.execute('CREATE INDEX IF NOT EXISTS name_index ON Users (name)')
 
-    
-    name = result.split('Имя: ')[1].split(',')[0].strip()
-    reason = result.split('Причина: ')[1].split(',')[0].strip()
-    health = result.split('Удовлетворение: ')[1].split(',')[0].strip()
-    age = result.split('Возраст: ')[1].split(',')[0].strip()
-    tonality = sentiment
-    
+        data = {
+            'name': extract_value(result, 'Имя:'),
+            'operator': extract_value(result, 'Оператор:'),
+            'reason': extract_value(result, 'Причина:'),
+            'satisfaction': extract_value(result, 'Удовлетворение:'),
+            'age': extract_value(result, 'Возраст:'),
+            'full_analysis': json.dumps(sentiment_data['full_analysis'])
+        }
 
-    cursor.execute('''
-    INSERT INTO Users (name, reason, health, tonality, age)
-    VALUES (?, ?, ?, ?, ?)''', 
-    (name, reason, health, sentiment_value, age))
+        cursor.execute('''
+        INSERT INTO Users (name, operator, reason, satisfaction, age, full_analysis)
+        VALUES (?, ?, ?, ?, ?,?)''', 
+        (
+            data['name'], 
+            data['operator'],
+            data['reason'], 
+            data['satisfaction'],
+            data['age'],
+            data['full_analysis']
+        ))
 
-    connection.commit()
-    connection.close()
+        connection.commit()
+        
+        print(f"Анализ тональности: {data['full_analysis']}")
+        
+    except Exception as e:
+        print(f"Ошибка при сохранении: {e}")
+    finally:
+        if connection:
+            connection.close()
+
+def extract_value(text, key):
+    try:
+        return text.split(key)[1].split(',')[0].strip()
+    except:
+        return "Не указано"
