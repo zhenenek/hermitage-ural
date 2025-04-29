@@ -142,7 +142,7 @@ def main_loop():
                     
                 try:
                     process_dialog(call_text, call_id)  
-                    mark_as_processed(call_id)
+                    
                 except Exception as e:
                     logging.error(f"Ошибка обработки: {str(e)}")
                     continue

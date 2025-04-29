@@ -45,10 +45,9 @@ def convert_to_wav(input_file):
     wav_file = os.path.splitext(input_file)[0] + '.wav'
     
     if input_file.lower().endswith('.mp3'):
-        os.system(f'ffmpeg -i "{input_file}" -acodec pcm_s16le -ar 16000 -ac 1 "{wav_file}"')
+        os.system(f'ffmpeg -hide_banner -loglevel error -i "{input_file}" -acodec pcm_s16le -ar 16000 -ac 1 "{wav_file}"')
     elif input_file.lower().endswith('.ogg'):
-        os.system(f'ffmpeg -i "{input_file}" -acodec pcm_s16le -ar 16000 -ac 1 "{wav_file}"')
-    
+        os.system(f'ffmpeg -hide_banner -loglevel error -i "{input_file}" -acodec pcm_s16le -ar 16000 -ac 1 "{wav_file}"')
     
     try:
         os.remove(input_file)
